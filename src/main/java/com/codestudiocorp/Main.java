@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 
 import java.io.FileReader;
+import java.io.IOException;
 
 public class Main {
     static final String JSON_FILE = "./src/main/resources/static/input/data.json";
@@ -29,6 +30,10 @@ public class Main {
                 System.out.println((jNodeType == JsonNodeType.ARRAY) ? "Values: " + jsonNode.get(field).toPrettyString() : "Value: " + jsonNode.findValues(field));
             });
 
+        }
+        catch (IOException ioe) {
+            System.err.println("error cause: " + ioe.getMessage());
+            ioe.printStackTrace();
         }
         catch (Exception e) {
             e.printStackTrace();
