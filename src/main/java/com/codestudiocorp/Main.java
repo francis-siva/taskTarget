@@ -7,6 +7,7 @@ public class Main {
         System.out.println("Task scheduler wip [=>]");
 
         FileAnalyser.readFile(JSON_FILE);
+        FileAnalyser.writeFile(JSON_FILE);
 
     }
 }

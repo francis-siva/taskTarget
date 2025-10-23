@@ -1,116 +1,90 @@
 {
-  "priority": [
-    "Top priority",
-    "Treat ASAP",
-    "To handle when relief state comes",
-    "Pending for a long time/ Optional"
-  ],
-  "activityScope": [
-    "professional",
-    "autopilot mode",
-    "intriguing",
-    "fun",
-    "good practice"
-  ],
-  "schedule": [
-    {
-      "task": "administration processes",
-      "priorityOrder": 1,
-      "activityTypes": [2],
-      "required": true,
-      "completed": false
-    },
-    {
-      "task": "auto maintenance",
-      "priorityOrder": 1,
-      "activityTypes": [5],
-      "required": true,
-      "completed": false
-    },
-    {
-      "task": "repair product",
-      "priorityOrder": 3,
-      "activityTypes": [5],
-      "required": true,
-      "completed": false
-    },
-    {
-      "task": "shop food",
-      "priorityOrder": 2,
-      "activityTypes": [4, 5],
-      "required": true,
-      "completed": false
-    },
-    {
-      "task": "shop device",
-      "priorityOrder": 3,
-      "activityTypes": [4, 5],
-      "required": false,
-      "completed": false
-    },
-    {
-      "task": "update on tech",
-      "priorityOrder": 1,
-      "activityTypes": [1, 3, 4, 5],
-      "required": true,
-      "completed": false
-    },
-    {
-      "task": "find out about AI concrete uses in life",
-      "priorityOrder": 2,
-      "activityTypes": [3, 4, 5],
-      "required": false,
-      "completed": false
-    },
-    {
-      "task": "update on social media (bluesky on JdG)",
-      "priorityOrder": 4,
-      "activityTypes": [3, 4, 5],
-      "required": true,
-      "completed": false
-    },
-    {
-      "task": "finance tuto",
-      "priorityOrder": 3,
-      "activityTypes": [3, 5],
-      "required": true,
-      "completed": false
-    },
-    {
-      "task": "book purchase",
-      "priorityOrder": 3,
-      "activityTypes": [1, 3, 4, 5],
-      "required": true,
-      "completed": false
-    },
-    {
-      "task": "create api",
-      "priorityOrder": 2,
-      "activityTypes": [1, 3, 4, 5],
-      "required": true,
-      "completed": false
-    },
-    {
-      "task": "think about next creation",
-      "priorityOrder": 1,
-      "activityTypes": [1, 3, 4, 5],
-      "required": true,
-      "completed": false
-    },
-    {
-      "task": "cinema",
-      "priorityOrder": 3,
-      "activityTypes": [4],
-      "required": true,
-      "completed": false
-    },
-    {
-      "task": "Explore world",
-      "priorityOrder": 3,
-      "activityTypes": [4, 5],
-      "required": true,
-      "completed": false
-    }
-  ],
-  "achieved": []
+  "priority" : [ "Top priority", "Treat ASAP", "To handle when relief state comes", "Pending for a long time/ Optional" ],
+  "activityScope" : [ "professional", "autopilot mode", "intriguing", "fun", "good practice" ],
+  "schedule" : [ {
+    "task" : "administration processes",
+    "priorityOrder" : 1,
+    "activityTypes" : [ 2 ],
+    "required" : true,
+    "completed" : false
+  }, {
+    "task" : "auto maintenance",
+    "priorityOrder" : 1,
+    "activityTypes" : [ 5 ],
+    "required" : true,
+    "completed" : false
+  }, {
+    "task" : "repair product",
+    "priorityOrder" : 3,
+    "activityTypes" : [ 5 ],
+    "required" : true,
+    "completed" : true
+  }, {
+    "task" : "shop food",
+    "priorityOrder" : 2,
+    "activityTypes" : [ 4, 5 ],
+    "required" : true,
+    "completed" : false
+  }, {
+    "task" : "shop device",
+    "priorityOrder" : 3,
+    "activityTypes" : [ 4, 5 ],
+    "required" : false,
+    "completed" : false
+  }, {
+    "task" : "update on tech",
+    "priorityOrder" : 1,
+    "activityTypes" : [ 1, 3, 4, 5 ],
+    "required" : true,
+    "completed" : false
+  }, {
+    "task" : "find out about AI concrete uses in life",
+    "priorityOrder" : 2,
+    "activityTypes" : [ 3, 4, 5 ],
+    "required" : false,
+    "completed" : false
+  }, {
+    "task" : "update on social media (bluesky on JdG)",
+    "priorityOrder" : 4,
+    "activityTypes" : [ 3, 4, 5 ],
+    "required" : true,
+    "completed" : false
+  }, {
+    "task" : "finance tuto",
+    "priorityOrder" : 3,
+    "activityTypes" : [ 3, 5 ],
+    "required" : true,
+    "completed" : false
+  }, {
+    "task" : "book purchase",
+    "priorityOrder" : 3,
+    "activityTypes" : [ 1, 3, 4, 5 ],
+    "required" : true,
+    "completed" : false
+  }, {
+    "task" : "create api",
+    "priorityOrder" : 2,
+    "activityTypes" : [ 1, 3, 4, 5 ],
+    "required" : true,
+    "completed" : false
+  }, {
+    "task" : "think about next creation",
+    "priorityOrder" : 1,
+    "activityTypes" : [ 1, 3, 4, 5 ],
+    "required" : true,
+    "completed" : false
+  }, {
+    "task" : "cinema",
+    "priorityOrder" : 3,
+    "activityTypes" : [ 4 ],
+    "required" : true,
+    "completed" : false
+  }, {
+    "task" : "Explore world",
+    "priorityOrder" : 3,
+    "activityTypes" : [ 4, 5 ],
+    "required" : true,
+    "completed" : false
+  } ],
+  "achieved" : [ ]
 }

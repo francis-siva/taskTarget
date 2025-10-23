@@ -16,8 +16,11 @@ public class JsonHandler {
      * To search if a particular value exists in a given Json Object fieldname.</br>
      * e.g. Searching for current available task element before operating on its index
      * @param jsonFieldName
+     *        {@code string} field location name Json tree
      * @param searchingValue
+     *        {@code string} result to identify in file
      * @param jsonNode
+     *        {@code Json data source}
      * @return
      */
     public static boolean isSearchingValue_existsInNodeField(String jsonFieldName, String searchingValue, JsonNode jsonNode) {
@@ -80,7 +83,7 @@ public class JsonHandler {
         if(JsonHandler.isSearchingValue_existsInNodeField(fieldName, searchingValue, scheduleNode)) {
             int searchingTaskIndex = scheduleNode.findValuesAsText(fieldName).indexOf(searchingValue);
             System.out.println("searchingTaskIndex: " + searchingTaskIndex + "# => " + scheduleNode.get(searchingTaskIndex));
-            JsonNode searchingTask = scheduleNode.get(searchingTaskIndex);//.deepCopy();//deepCopy() necessity???
+            JsonNode searchingTask = scheduleNode.get(searchingTaskIndex);
             boolean similarBooleanValuePassed = searchingTask.get("completed").asBoolean() == taskCompletionState;
 
             if(searchingTask.has("completed") && (!similarBooleanValuePassed)) {
