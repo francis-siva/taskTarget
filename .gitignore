@@ -3,3 +3,5 @@ target/
 
 ### IntelliJ IDEA ###
 .idea
+
+/src/main/resources/static/input/excludedfile
