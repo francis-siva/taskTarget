@@ -50,6 +50,7 @@ public class FileAnalyser {
 
             JsonNode jsonNode = objMapper.readTree(fileReader);
             JsonHandler.setNodeValue("repair product", true, jsonNode, "setTaskCompleted", pathToFile);
+            JsonHandler.setNodeValue("repair product", null, jsonNode, "setTaskAchieved", pathToFile);
 
             fileReader.close();
         }

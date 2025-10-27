@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JsonHandler {
-    public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("setTaskCompleted"));
+    public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("setTaskCompleted", "setTaskAchieved"));
 
     /**
      * To search if a particular value exists in a given Json Object fieldname.</br>
@@ -58,6 +58,10 @@ public class JsonHandler {
                         setTaskCompleted(jsonNode, nodeValue, (Boolean) updatedValue, pathToFile);
                     }
                     break;
+                case "setTaskAchieved":
+                    System.out.println("here to achieve");
+                    setTaskToAchieved(jsonNode, nodeValue, pathToFile);
+                    break;
             }
         }
     }
@@ -100,6 +104,34 @@ public class JsonHandler {
                 }
             }
         }
+    }
+
+    private static JsonNode getscheduleNode(JsonNode jsonNode) { return jsonNode.get("schedule"); }
+
+    private static int getTaskIndex(JsonNode jsonNode, String taskName) {
+        int taskIndex = -1;
+
+        JsonNode scheduleNode = getscheduleNode(jsonNode);
+        String fieldName = "task", searchingValue = taskName;
+
+        if(JsonHandler.isSearchingValue_existsInNodeField(fieldName, searchingValue, scheduleNode)) {
+            taskIndex = scheduleNode.findValuesAsText(fieldName).indexOf(searchingValue);
+        }
+        return taskIndex;
+    }
+
+    private static void setTaskToAchieved(JsonNode jsonNode, String taskName, String pathToFile) {
+        JsonNode scheduleNode = getscheduleNode(jsonNode);
+        System.out.println(scheduleNode);
+
+        int searchingTaskIndex = getTaskIndex(jsonNode, taskName);//scheduleNode.findValuesAsText(fieldName).indexOf(searchingValue);
+
+        // Check if working with concrete task index before further process
+        if (searchingTaskIndex >= 0) {
+            System.out.println("searchingTaskIndex: " + searchingTaskIndex + "# => " + scheduleNode.get(searchingTaskIndex));
+            JsonNode searchingTask = scheduleNode.get(searchingTaskIndex);//.deepCopy();//deepCopy() necessity???
+        }
+
     }
 
 }
