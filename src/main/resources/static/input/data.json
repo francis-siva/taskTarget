@@ -86,5 +86,11 @@
     "required" : true,
     "completed" : false
   } ],
-  "achieved" : [ ]
+  "achieved" : [ {
+    "task" : "repair product",
+    "priorityOrder" : 3,
+    "activityTypes" : [ 5 ],
+    "required" : true,
+    "completed" : true
+  } ]
 }

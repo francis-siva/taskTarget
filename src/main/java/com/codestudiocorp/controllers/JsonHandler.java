@@ -2,6 +2,7 @@ package com.codestudiocorp.controllers;
 
 import com.codestudiocorp.FileAnalyser;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
@@ -122,7 +123,7 @@ public class JsonHandler {
         return taskIndex;
     }
 
-    private static void setTaskToAchieved(JsonNode jsonNode, String taskName, String pathToFile) {
+    private static void setTaskToAchieved(JsonNode jsonNode, String taskName, String pathToFile) throws IOException {
         JsonNode scheduleNode = getscheduleNode(jsonNode);
         System.out.println(scheduleNode);
 
@@ -131,18 +132,19 @@ public class JsonHandler {
         // Check if working with concrete task index before further process
         if (searchingTaskIndex >= 0) {
             System.out.println("searchingTaskIndex: " + searchingTaskIndex + "# => " + scheduleNode.get(searchingTaskIndex));
-            JsonNode searchingTask = scheduleNode.get(searchingTaskIndex);//.deepCopy();//deepCopy() necessity???
+            JsonNode searchingTask = scheduleNode.get(searchingTaskIndex);
+
             JsonNode taskCopy = searchingTask.deepCopy();
-            System.out.println("taskCopy: " + taskCopy);
-//            JsonNode taskCopy_completed = taskCopy.get("completed");
-//            taskCopy_completed.
-//            ObjectNode foundTask = (ObjectNode) searchingTask;
-//                    foundTask.put("completed", taskCompletionState);
-            /*ObjectNode editing = */((ObjectNode) taskCopy).put("task", "repair product done");
+
+            //((ObjectNode) taskCopy).put("task", "repair product done");
             System.out.println("searchingTask: " + searchingTask + "\n taskCopy" + taskCopy);
 
             JsonNode achievedNode = getachievedNode(jsonNode);
+            achievedNode = ((ArrayNode) achievedNode).add(taskCopy);
+            System.out.println("achievedNode: " + achievedNode);
             //todo:remove task from schedule once added in achieved!!!
+
+            FileAnalyser.serializeFile(pathToFile, jsonNode);
         }
 
     }
