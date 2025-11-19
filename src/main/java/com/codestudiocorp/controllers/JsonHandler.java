@@ -107,6 +107,8 @@ public class JsonHandler {
     }
 
     private static JsonNode getscheduleNode(JsonNode jsonNode) { return jsonNode.get("schedule"); }
+    private static JsonNode getachievedNode(JsonNode jsonNode) { return jsonNode.get("achieved"); }
+    //jsonNode.findValue("achieved");todo: define in FileAnalyser a mainControl feature of requiring field in file
 
     private static int getTaskIndex(JsonNode jsonNode, String taskName) {
         int taskIndex = -1;
@@ -124,12 +126,23 @@ public class JsonHandler {
         JsonNode scheduleNode = getscheduleNode(jsonNode);
         System.out.println(scheduleNode);
 
-        int searchingTaskIndex = getTaskIndex(jsonNode, taskName);//scheduleNode.findValuesAsText(fieldName).indexOf(searchingValue);
+        int searchingTaskIndex = getTaskIndex(jsonNode, taskName);
 
         // Check if working with concrete task index before further process
         if (searchingTaskIndex >= 0) {
             System.out.println("searchingTaskIndex: " + searchingTaskIndex + "# => " + scheduleNode.get(searchingTaskIndex));
             JsonNode searchingTask = scheduleNode.get(searchingTaskIndex);//.deepCopy();//deepCopy() necessity???
+            JsonNode taskCopy = searchingTask.deepCopy();
+            System.out.println("taskCopy: " + taskCopy);
+//            JsonNode taskCopy_completed = taskCopy.get("completed");
+//            taskCopy_completed.
+//            ObjectNode foundTask = (ObjectNode) searchingTask;
+//                    foundTask.put("completed", taskCompletionState);
+            /*ObjectNode editing = */((ObjectNode) taskCopy).put("task", "repair product done");
+            System.out.println("searchingTask: " + searchingTask + "\n taskCopy" + taskCopy);
+
+            JsonNode achievedNode = getachievedNode(jsonNode);
+            //todo:remove task from schedule once added in achieved!!!
         }
 
     }
