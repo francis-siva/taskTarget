@@ -2,14 +2,12 @@ package com.codestudiocorp.controllers;
 
 import com.codestudiocorp.FileAnalyser;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class JsonHandler {
     public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("setTaskCompleted", "setTaskAchieved"));
@@ -150,6 +148,14 @@ public class JsonHandler {
         return taskIndex;
     }
 
+    /**
+     * To check if a task belongs to achieved array's node
+     * @param jsonNode represents Json tree
+     *        {@code JsonNode}
+     * @param taskNode Task Json value to find among achieved node
+     *        {@code JsonNode}
+     * @return {@code true} if task is found else {@code false}
+     */
     private static boolean isTaskAchieved(JsonNode jsonNode, JsonNode taskNode) {
         return getachievedNode(jsonNode).findValuesAsText("task").contains(taskNode.get("task").textValue());
     }
