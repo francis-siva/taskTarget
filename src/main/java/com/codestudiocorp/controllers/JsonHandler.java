@@ -80,7 +80,7 @@ public class JsonHandler {
      * @throws IOException
      */
     private static void setTaskCompleted(JsonNode jsonNode, String taskName, Boolean taskCompletionState, String pathToFile) throws IOException {
-        JsonNode scheduleNode = jsonNode.get("schedule");
+        JsonNode scheduleNode = getscheduleNode(jsonNode);
         System.out.println(scheduleNode);
         List<JsonNode> scheduleList= scheduleNode.findValues("task");
 
@@ -108,22 +108,6 @@ public class JsonHandler {
         }
     }
 
-    private static JsonNode getscheduleNode(JsonNode jsonNode) { return jsonNode.get("schedule"); }
-    private static JsonNode getachievedNode(JsonNode jsonNode) { return jsonNode.get("achieved"); }
-    //jsonNode.findValue("achieved");todo: define in FileAnalyser a mainControl feature of requiring field in file
-
-    private static int getTaskIndex(JsonNode jsonNode, String taskName) {
-        int taskIndex = -1;
-
-        JsonNode scheduleNode = getscheduleNode(jsonNode);
-        String fieldName = "task", searchingValue = taskName;
-
-        if(JsonHandler.isSearchingValue_existsInNodeField(fieldName, searchingValue, scheduleNode)) {
-            taskIndex = scheduleNode.findValuesAsText(fieldName).indexOf(searchingValue);
-        }
-        return taskIndex;
-    }
-
     private static void setTaskToAchieved(JsonNode jsonNode, String taskName, String pathToFile) throws IOException {
         JsonNode scheduleNode = getscheduleNode(jsonNode);
         System.out.println(scheduleNode);
@@ -148,7 +132,22 @@ public class JsonHandler {
 
             FileAnalyser.serializeFile(pathToFile, jsonNode);
         }
+    }
 
+    private static JsonNode getscheduleNode(JsonNode jsonNode) { return jsonNode.get("schedule"); }
+    private static JsonNode getachievedNode(JsonNode jsonNode) { return jsonNode.get("achieved"); }
+    //jsonNode.findValue("achieved");todo: define in FileAnalyser a mainControl feature of requiring field in file
+
+    private static int getTaskIndex(JsonNode jsonNode, String taskName) {
+        int taskIndex = -1;
+
+        JsonNode scheduleNode = getscheduleNode(jsonNode);
+        String fieldName = "task", searchingValue = taskName;
+
+        if(JsonHandler.isSearchingValue_existsInNodeField(fieldName, searchingValue, scheduleNode)) {
+            taskIndex = scheduleNode.findValuesAsText(fieldName).indexOf(searchingValue);
+        }
+        return taskIndex;
     }
 
     private static boolean isTaskAchieved(JsonNode jsonNode, JsonNode taskNode) {
