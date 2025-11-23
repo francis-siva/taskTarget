@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JsonHandler {
     public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("setTaskCompleted", "setTaskAchieved"));
@@ -140,13 +141,17 @@ public class JsonHandler {
             System.out.println("searchingTask: " + searchingTask + "\n taskCopy" + taskCopy);
 
             JsonNode achievedNode = getachievedNode(jsonNode);
-            achievedNode = ((ArrayNode) achievedNode).add(taskCopy);
+//            achievedNode = ((ArrayNode) achievedNode).add(taskCopy);
             System.out.println("achievedNode: " + achievedNode);
             //todo:remove task from schedule once added in achieved!!!
+            System.out.println(isTaskAchieved(jsonNode, taskCopy));
 
             FileAnalyser.serializeFile(pathToFile, jsonNode);
         }
 
     }
 
+    private static boolean isTaskAchieved(JsonNode jsonNode, JsonNode taskNode) {
+        return getachievedNode(jsonNode).findValuesAsText("task").contains(taskNode.get("task").textValue());
+    }
 }
