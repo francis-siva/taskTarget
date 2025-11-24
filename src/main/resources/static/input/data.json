@@ -14,12 +14,6 @@
     "required" : true,
     "completed" : false
   }, {
-    "task" : "repair product",
-    "priorityOrder" : 3,
-    "activityTypes" : [ 5 ],
-    "required" : true,
-    "completed" : true
-  }, {
     "task" : "shop food",
     "priorityOrder" : 2,
     "activityTypes" : [ 4, 5 ],

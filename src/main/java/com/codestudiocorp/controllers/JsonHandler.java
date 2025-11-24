@@ -2,6 +2,7 @@ package com.codestudiocorp.controllers;
 
 import com.codestudiocorp.FileAnalyser;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class JsonHandler {
     public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("setTaskCompleted", "setTaskAchieved"));
+    public static final String TASK_FIELD = "task";
 
     /**
      * To search if a particular value exists in a given Json Object fieldname.</br>
@@ -123,14 +125,20 @@ public class JsonHandler {
             System.out.println("searchingTask: " + searchingTask + "\n taskCopy" + taskCopy);
 
             JsonNode achievedNode = getachievedNode(jsonNode);
-//            achievedNode = ((ArrayNode) achievedNode).add(taskCopy);
+            //achievedNode = ((ArrayNode) achievedNode).add(taskCopy);//todo: to uncomment once method defined (addTask ScheduleNode& AchievedNode)
             System.out.println("achievedNode: " + achievedNode);
-            //todo:remove task from schedule once added in achieved!!!
-            System.out.println(isTaskAchieved(jsonNode, taskCopy));
+
+            if(isTaskAchieved(jsonNode, taskCopy)) {
+                deleteScheduleTask(scheduleNode, searchingTask);
+            }
 
             FileAnalyser.serializeFile(pathToFile, jsonNode);
         }
+        else {
+            System.out.println("Task \"" + taskName + "\" is not in [schedule]");
+        }
     }
+
 
     private static JsonNode getscheduleNode(JsonNode jsonNode) { return jsonNode.get("schedule"); }
     private static JsonNode getachievedNode(JsonNode jsonNode) { return jsonNode.get("achieved"); }
@@ -158,5 +166,12 @@ public class JsonHandler {
      */
     private static boolean isTaskAchieved(JsonNode jsonNode, JsonNode taskNode) {
         return getachievedNode(jsonNode).findValuesAsText("task").contains(taskNode.get("task").textValue());
+    }
+
+    //Delete Task from [schedule] once placed in [achieved] array
+    private static void deleteScheduleTask(JsonNode jsonNode, JsonNode taskNode) {
+        int taskIndex = jsonNode.findValues("task").indexOf(taskNode.get("task"));
+
+        if( taskIndex >= 0) { ((ArrayNode) jsonNode).remove(taskIndex);}
     }
 }
