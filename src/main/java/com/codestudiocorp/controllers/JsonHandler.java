@@ -82,9 +82,9 @@ public class JsonHandler {
     private static void setTaskCompleted(JsonNode jsonNode, String taskName, Boolean taskCompletionState, String pathToFile) throws IOException {
         JsonNode scheduleNode = getscheduleNode(jsonNode);
         System.out.println(scheduleNode);
-        List<JsonNode> scheduleList= scheduleNode.findValues("task");
+        List<JsonNode> scheduleList= scheduleNode.findValues(TASK_FIELD);
 
-        String fieldName = "task", searchingValue = taskName;
+        String fieldName = TASK_FIELD, searchingValue = taskName;
 
         if(JsonHandler.isSearchingValue_existsInNodeField(fieldName, searchingValue, scheduleNode)) {
             int searchingTaskIndex = scheduleNode.findValuesAsText(fieldName).indexOf(searchingValue);
@@ -135,9 +135,9 @@ public class JsonHandler {
             FileAnalyser.serializeFile(pathToFile, jsonNode);
         }
         else {
-            System.out.println("Task \"" + taskName + "\" is not in [schedule]");
+            System.out.println(TASK_FIELD.toUpperCase() + " \"" + taskName + "\" is not in [schedule]");
         }
-    }
+    }//todo:implement task editor feature
 
 
     private static JsonNode getscheduleNode(JsonNode jsonNode) { return jsonNode.get("schedule"); }
@@ -148,7 +148,7 @@ public class JsonHandler {
         int taskIndex = -1;
 
         JsonNode scheduleNode = getscheduleNode(jsonNode);
-        String fieldName = "task", searchingValue = taskName;
+        String fieldName = TASK_FIELD, searchingValue = taskName;
 
         if(JsonHandler.isSearchingValue_existsInNodeField(fieldName, searchingValue, scheduleNode)) {
             taskIndex = scheduleNode.findValuesAsText(fieldName).indexOf(searchingValue);
@@ -165,12 +165,12 @@ public class JsonHandler {
      * @return {@code true} if task is found else {@code false}
      */
     private static boolean isTaskAchieved(JsonNode jsonNode, JsonNode taskNode) {
-        return getachievedNode(jsonNode).findValuesAsText("task").contains(taskNode.get("task").textValue());
+        return getachievedNode(jsonNode).findValuesAsText(TASK_FIELD).contains(taskNode.get(TASK_FIELD).textValue());
     }
 
     //Delete Task from [schedule] once placed in [achieved] array
     private static void deleteScheduleTask(JsonNode jsonNode, JsonNode taskNode) {
-        int taskIndex = jsonNode.findValues("task").indexOf(taskNode.get("task"));
+        int taskIndex = jsonNode.findValues(TASK_FIELD).indexOf(taskNode.get(TASK_FIELD));
 
         if( taskIndex >= 0) { ((ArrayNode) jsonNode).remove(taskIndex);}
     }
