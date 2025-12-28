@@ -103,6 +103,8 @@ public class JsonHandler {
                     //System.out.println("END: " +jsonNode);
 
                     FileAnalyser.serializeFile(pathToFile, jsonNode);
+
+                    setTaskToAchieved(jsonNode, taskName, pathToFile);//implicit call to AchievedTask once Completed
                 }
             }
         }
