@@ -61,7 +61,6 @@ public class JsonHandler {
                     }
                     break;
                 case "setTaskAchieved":
-                    System.out.println("here to achieve");
                     setTaskToAchieved(jsonNode, nodeValue, pathToFile);
                     break;
             }
@@ -81,7 +80,6 @@ public class JsonHandler {
      */
     private static void setTaskCompleted(JsonNode jsonNode, String taskName, Boolean taskCompletionState, String pathToFile) throws IOException {
         JsonNode scheduleNode = getscheduleNode(jsonNode);
-        System.out.println(scheduleNode);
         List<JsonNode> scheduleList= scheduleNode.findValues(TASK_FIELD);
 
         String fieldName = TASK_FIELD, searchingValue = taskName;
@@ -98,7 +96,6 @@ public class JsonHandler {
                     ObjectNode foundTask = (ObjectNode) searchingTask;
                     foundTask.put("completed", taskCompletionState);
                     System.out.println(foundTask);
-                    //todo:add completed:true (task) to achieved[]
                     System.out.println("totalTask:" + scheduleList.size());
                     //System.out.println("END: " +jsonNode);
 
@@ -112,7 +109,6 @@ public class JsonHandler {
 
     private static void setTaskToAchieved(JsonNode jsonNode, String taskName, String pathToFile) throws IOException {
         JsonNode scheduleNode = getscheduleNode(jsonNode);
-        System.out.println(scheduleNode);
 
         int searchingTaskIndex = getTaskIndex(jsonNode, taskName);
 
@@ -127,7 +123,7 @@ public class JsonHandler {
             System.out.println("searchingTask: " + searchingTask + "\n taskCopy" + taskCopy);
 
             JsonNode achievedNode = getachievedNode(jsonNode);
-            //achievedNode = ((ArrayNode) achievedNode).add(taskCopy);//todo: to uncomment once method defined (addTask ScheduleNode& AchievedNode)
+            achievedNode = ((ArrayNode) achievedNode).add(taskCopy);//todo: to uncomment once method defined (addTask ScheduleNode& AchievedNode)
             System.out.println("achievedNode: " + achievedNode);
 
             if(isTaskAchieved(jsonNode, taskCopy)) {
@@ -170,7 +166,7 @@ public class JsonHandler {
         return getachievedNode(jsonNode).findValuesAsText(TASK_FIELD).contains(taskNode.get(TASK_FIELD).textValue());
     }
 
-    //Delete Task from [schedule] once placed in [achieved] array
+    //Delete Task from schedule[] once placed in achieved[] array
     private static void deleteScheduleTask(JsonNode jsonNode, JsonNode taskNode) {
         int taskIndex = jsonNode.findValues(TASK_FIELD).indexOf(taskNode.get(TASK_FIELD));
 
