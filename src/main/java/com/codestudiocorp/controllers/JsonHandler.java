@@ -142,6 +142,14 @@ public class JsonHandler {
     private static JsonNode getachievedNode(JsonNode jsonNode) { return jsonNode.get("achieved"); }
     //jsonNode.findValue("achieved");todo: define in FileAnalyser a mainControl feature of requiring field in file
 
+    /**
+     * To retrieve the index of an existing node with {@code taskName} value
+     * @param jsonNode represents Json tree
+     *        {@code JsonNode}
+     * @param taskName Task's name to find among schedule node
+     *        {@code JsonNode}
+     * @return index of given {@code taskName} if found else -1
+     */
     private static int getTaskIndex(JsonNode jsonNode, String taskName) {
         int taskIndex = -1;
 
