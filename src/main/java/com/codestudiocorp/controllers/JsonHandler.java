@@ -105,6 +105,9 @@ public class JsonHandler {
                 }
             }
         }
+        else {
+            System.out.println(String.format("%1$s \"%2$s\" is no more/ never set in [schedule]", TASK_FIELD.toUpperCase(), taskName));
+        }
     }
 
     private static void setTaskToAchieved(JsonNode jsonNode, String taskName, String pathToFile) throws IOException {
@@ -133,7 +136,7 @@ public class JsonHandler {
             FileAnalyser.serializeFile(pathToFile, jsonNode);
         }
         else {
-            System.out.println(TASK_FIELD.toUpperCase() + " \"" + taskName + "\" is not in [schedule]");
+            System.out.println(String.format("%1$s \"%2$s\" is not in [schedule]", TASK_FIELD.toUpperCase(), taskName));
         }
     }//todo:implement task editor feature
 

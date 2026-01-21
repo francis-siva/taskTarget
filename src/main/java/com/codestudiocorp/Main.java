@@ -22,7 +22,7 @@ public class Main {
             FileAnalyser.serializeFile(JSON_FILE, jsonNode);
         }
         catch (IOException ioe) {
-            System.err.println("error cause: " + ioe.getMessage());
+            System.err.println("error cause: " + ioe.getMessage()  );
             throw new RuntimeException(ioe);
         }
         FileAnalyser.writeFile(JSON_FILE);
