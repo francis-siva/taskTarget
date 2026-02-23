@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JsonHandler {
-    public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("setTaskCompleted", "setTaskAchieved"));
+    public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("scheduleTask", "setTaskCompleted", "setTaskAchieved"));
     public static final String TASK_FIELD = "task";
 
     /**
