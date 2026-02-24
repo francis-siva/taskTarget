@@ -73,6 +73,12 @@
     "activityTypes" : [ 4, 5 ],
     "required" : true,
     "completed" : false
+  }, {
+    "task" : "create own java api",
+    "priorityOrder" : 2,
+    "activityTypes" : [ 1, 3, 4, 5 ],
+    "required" : true,
+    "completed" : false
   } ],
   "achieved" : [ {
     "task" : "repair product",

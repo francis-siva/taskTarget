@@ -1,6 +1,7 @@
 package com.codestudiocorp.controllers;
 
 import com.codestudiocorp.FileAnalyser;
+import com.codestudiocorp.model.Task;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -26,11 +27,11 @@ public class JsonHandler {
      * @return
      */
     public static boolean isSearchingValue_existsInNodeField(String jsonFieldName, String searchingValue, JsonNode jsonNode) {
-        boolean res = false;
+//        boolean res = false;
         boolean checkJsonObjFieldNamePresence = !jsonNode.findValuesAsText(jsonFieldName).isEmpty();
         boolean checkValuePresenceInJson = jsonNode.findValuesAsText(jsonFieldName).contains(searchingValue);
 
-        return (checkJsonObjFieldNamePresence)? (checkValuePresenceInJson) : res;
+        return (checkJsonObjFieldNamePresence)? (checkValuePresenceInJson) : false;
     }
 
     /**
@@ -55,6 +56,11 @@ public class JsonHandler {
         else {
 
             switch (nodeOperation) {
+                case "scheduleTask":
+                    if(updatedValue instanceof Task) {
+                        addTaskToSchedule(jsonNode, ((Task) updatedValue), pathToFile);
+                    }
+                    break;
                 case "setTaskCompleted":
                     if(updatedValue.getClass().getSimpleName().equals("Boolean")) {
                         setTaskCompleted(jsonNode, nodeValue, (Boolean) updatedValue, pathToFile);
@@ -80,7 +86,7 @@ public class JsonHandler {
      */
     private static void setTaskCompleted(JsonNode jsonNode, String taskName, Boolean taskCompletionState, String pathToFile) throws IOException {
         JsonNode scheduleNode = getscheduleNode(jsonNode);
-        List<JsonNode> scheduleList= scheduleNode.findValues(TASK_FIELD);
+        List<JsonNode> scheduleList = scheduleNode.findValues(TASK_FIELD);
 
         String fieldName = TASK_FIELD, searchingValue = taskName;
 
@@ -97,7 +103,6 @@ public class JsonHandler {
                     foundTask.put("completed", taskCompletionState);
                     System.out.println(foundTask);
                     System.out.println("totalTask:" + scheduleList.size());
-                    //System.out.println("END: " +jsonNode);
 
                     FileAnalyser.serializeFile(pathToFile, jsonNode);
 
@@ -141,6 +146,27 @@ public class JsonHandler {
     }//todo:implement task editor feature
 
 
+    private static void addTaskToSchedule(JsonNode jsonNode, Task taskToCreate, String pathToFile) {
+        JsonNode scheduleNode = getscheduleNode(jsonNode);
+        String searchingValue = taskToCreate.getTaskName();
+
+        if(JsonHandler.isSearchingValue_existsInNodeField(TASK_FIELD, searchingValue, scheduleNode)) {
+            System.out.println(String.format("%1$s \"%2$s\" is already present in [schedule]", TASK_FIELD.toUpperCase(), searchingValue));
+        }//todo: else if (case: where similarities in words matching scheduled task(s) to link with)
+        else {
+            //ObjectNode declaration to add new task in schedule
+            ObjectNode scheduleTaskToAddNode = ((ArrayNode) scheduleNode).addObject();
+
+            scheduleTaskToAddNode.put("task", searchingValue);
+            scheduleTaskToAddNode.put("priorityOrder", taskToCreate.getPriorityOrder());
+            scheduleTaskToAddNode.putArray("activityTypes");
+            scheduleTaskToAddNode.set("activityTypes", FileAnalyser.objMapper.valueToTree(taskToCreate.getActivityTypes()));
+            scheduleTaskToAddNode.put("required", taskToCreate.isRequired());
+            scheduleTaskToAddNode.put("completed", taskToCreate.isCompleted());
+
+            System.out.println(String.format("New task scheduled: %s", scheduleTaskToAddNode));
+        }
+    }
     private static JsonNode getscheduleNode(JsonNode jsonNode) { return jsonNode.get("schedule"); }
     private static JsonNode getachievedNode(JsonNode jsonNode) { return jsonNode.get("achieved"); }
     //jsonNode.findValue("achieved");todo: define in FileAnalyser a mainControl feature of requiring field in file
