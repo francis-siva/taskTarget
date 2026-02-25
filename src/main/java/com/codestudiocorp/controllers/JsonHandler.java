@@ -14,6 +14,7 @@ import java.util.List;
 public class JsonHandler {
     public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("scheduleTask", "setTaskCompleted", "setTaskAchieved"));
     public static final String TASK_FIELD = "task";
+    public static final String[] TASK_TYPE = {"schedule", "achieved"};
 
     /**
      * To search if a particular value exists in a given Json Object fieldname.</br>
@@ -56,6 +57,11 @@ public class JsonHandler {
         else {
 
             switch (nodeOperation) {
+                case "findTask":
+                    if(updatedValue instanceof String) {
+                        findTaskNode(nodeValue, ((String) updatedValue), jsonNode, pathToFile);
+                    }
+                    break;
                 case "scheduleTask":
                     if(updatedValue instanceof Task) {
                         addTaskToSchedule(jsonNode, ((Task) updatedValue), pathToFile);
@@ -146,7 +152,7 @@ public class JsonHandler {
     }//todo:implement task editor feature
 
 
-    private static void addTaskToSchedule(JsonNode jsonNode, Task taskToCreate, String pathToFile) {
+    private static void addTaskToSchedule(JsonNode jsonNode, Task taskToCreate, String pathToFile) throws IOException {
         JsonNode scheduleNode = getscheduleNode(jsonNode);
         String searchingValue = taskToCreate.getTaskName();
 
@@ -164,8 +170,30 @@ public class JsonHandler {
             scheduleTaskToAddNode.put("required", taskToCreate.isRequired());
             scheduleTaskToAddNode.put("completed", taskToCreate.isCompleted());
 
+            FileAnalyser.serializeFile(pathToFile, jsonNode);
             System.out.println(String.format("New task scheduled: %s", scheduleTaskToAddNode));
         }
+    }
+
+    //Search Task depends on taskTypeInput value ("schedule", "achieved")nodeValue, updatedValue, jsonNode, pathToFile
+    static JsonNode findTaskNode(String taskName, String taskTypeInput, JsonNode jsonNode, String pathToFile) {
+        JsonNode nodeResult = null;
+
+        if(Arrays.asList(TASK_TYPE).contains(taskTypeInput)) {
+            //"schedule" Case
+            if(taskTypeInput.equals(TASK_TYPE[0])) {
+
+            }
+            //"achieved" Case
+            else {
+
+            }
+            //FileAnalyser.serializeFile(pathToFile, jsonNode);
+        }
+        else {
+            System.out.println(String.format("Error! wrong value passed at taskTypeInput: %s", taskTypeInput));
+        }
+        return nodeResult;
     }
     private static JsonNode getscheduleNode(JsonNode jsonNode) { return jsonNode.get("schedule"); }
     private static JsonNode getachievedNode(JsonNode jsonNode) { return jsonNode.get("achieved"); }
