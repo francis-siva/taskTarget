@@ -25,13 +25,15 @@ public class Main {
             Task javaCreationTask = new Task("create own java api", 2, new ArrayList<>(Arrays.asList(1, 3, 4, 5 )), true, false);
             JsonHandler.setNodeValue("schedule", javaCreationTask, jsonNode, "scheduleTask", JSON_FILE);
 
+            JsonHandler.findTaskNode("create own java api", "schedule", jsonNode);
+
             FileAnalyser.serializeFile(JSON_FILE, jsonNode);
         }
         catch (IOException ioe) {
             System.err.println("error cause: " + ioe.getMessage());
             throw new RuntimeException(ioe);
         }
-        FileAnalyser.writeFile(JSON_FILE);
 
+        FileAnalyser.writeFile(JSON_FILE);
     }
 }

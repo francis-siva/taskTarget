@@ -57,11 +57,6 @@ public class JsonHandler {
         else {
 
             switch (nodeOperation) {
-                case "findTask":
-                    if(updatedValue instanceof String) {
-                        findTaskNode(nodeValue, ((String) updatedValue), jsonNode, pathToFile);
-                    }
-                    break;
                 case "scheduleTask":
                     if(updatedValue instanceof Task) {
                         addTaskToSchedule(jsonNode, ((Task) updatedValue), pathToFile);
@@ -163,7 +158,7 @@ public class JsonHandler {
             //ObjectNode declaration to add new task in schedule
             ObjectNode scheduleTaskToAddNode = ((ArrayNode) scheduleNode).addObject();
 
-            scheduleTaskToAddNode.put("task", searchingValue);
+            scheduleTaskToAddNode.put(TASK_FIELD, searchingValue);
             scheduleTaskToAddNode.put("priorityOrder", taskToCreate.getPriorityOrder());
             scheduleTaskToAddNode.putArray("activityTypes");
             scheduleTaskToAddNode.set("activityTypes", FileAnalyser.objMapper.valueToTree(taskToCreate.getActivityTypes()));
@@ -175,23 +170,27 @@ public class JsonHandler {
         }
     }
 
-    //Search Task depends on taskTypeInput value ("schedule", "achieved")nodeValue, updatedValue, jsonNode, pathToFile
-    static JsonNode findTaskNode(String taskName, String taskTypeInput, JsonNode jsonNode, String pathToFile) {
+    //Search Task depends on taskTypeInput value ("schedule", "achieved")
+    public static JsonNode findTaskNode(String taskName, String taskTypeInput, JsonNode jsonNode) {
         JsonNode nodeResult = null;
 
         if(Arrays.asList(TASK_TYPE).contains(taskTypeInput)) {
-            //"schedule" Case
-            if(taskTypeInput.equals(TASK_TYPE[0])) {
+            JsonNode taskTypeInputNode;
+            taskTypeInputNode = (taskTypeInput.equals(TASK_TYPE[0])) ? getscheduleNode(jsonNode) : getachievedNode(jsonNode);
+            //System.out.println(String.format("taskname to search: %s", taskName));/*keep to debug*/
+            List<String> taskNodeList = taskTypeInputNode.findValuesAsText(TASK_FIELD);
 
+            //Check if getscheduleNode() in "schedule" Case / getachievedNode() in "achieved" Case contains searching [taskName]
+            if(taskNodeList.contains(taskName)) {
+                int indexTask = taskNodeList.indexOf(taskName);
+                System.out.println(String.format("%1$S \"%2$s\" found at indexTask: %3$s of [%4$s]", TASK_FIELD, taskNodeList.get(indexTask), indexTask, taskTypeInput));
+                return taskTypeInputNode.findValues(TASK_FIELD).get(indexTask);//return a TextNode
             }
-            //"achieved" Case
-            else {
-
-            }
-            //FileAnalyser.serializeFile(pathToFile, jsonNode);
+            System.err.println(String.format("%1$S \"%2$s\" not found in [%3$s]", TASK_FIELD, taskName, taskTypeInput));
+            //todo:suggest results when similarities came (regex&str_deep_process)
         }
-        else {
-            System.out.println(String.format("Error! wrong value passed at taskTypeInput: %s", taskTypeInput));
+        else {//Error on [nodeOperation] parameter. Incompatible value given: nodeOperation is different from TASK_TYPE
+            System.err.println(String.format("Error on [taskTypeInput] parameter. Wrong argument value is passed: %s", taskTypeInput));
         }
         return nodeResult;
     }
