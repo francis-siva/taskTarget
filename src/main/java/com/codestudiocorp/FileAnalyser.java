@@ -9,9 +9,31 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FileAnalyser {
     public static final ObjectMapper objMapper = new ObjectMapper();
+    public static final ArrayList<String> FILE_REQUIRED_FIELDS = new ArrayList<>(Arrays.asList("priority", "activityScope", "schedule", "achieved"));
+
+    /**
+     * Search presence of required Fieldnames in file
+     * @param pathToFile
+     * @return
+     * @throws IOException
+     */
+    public static boolean requiredFields_areInFile(String pathToFile) throws IOException {
+        boolean res;
+
+        FileReader fileReader = new FileReader(pathToFile);
+        JsonNode jsonNode = objMapper.readTree(fileReader);
+
+        //System.out.println("filterCollected?" + FILE_REQUIRED_FIELDS.stream().filter(fieldName -> jsonNode.has(fieldName)).collect(Collectors.toList()).size());
+        res = FILE_REQUIRED_FIELDS.stream().allMatch(fieldName -> jsonNode.has(fieldName));
+        System.out.println(String.format("Required_Fields allMatch? %1b", res));
+
+        return res;
+    }
 
     public static void readFile(String pathToFile) {
 
