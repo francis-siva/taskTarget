@@ -16,6 +16,14 @@ public class FileAnalyser {
     public static final ObjectMapper objMapper = new ObjectMapper();
     public static final ArrayList<String> FILE_REQUIRED_FIELDS = new ArrayList<>(Arrays.asList("priority", "activityScope", "schedule", "achieved"));
 
+    public static boolean isJsonFileExtension(String pathToFile) throws IOException {
+
+        File file = new File(pathToFile);
+        //System.out.println(file.getName());
+        List<String> filenameParts = Arrays.asList(file.getName().split("\\."));
+        return "json".equals(filenameParts.get(filenameParts.size()-1));
+    }
+
     /**
      * Search presence of required Fieldnames in file
      * @param pathToFile
