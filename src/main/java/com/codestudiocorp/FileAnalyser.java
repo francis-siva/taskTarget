@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class FileAnalyser {
     public static final ObjectMapper objMapper = new ObjectMapper();
@@ -31,14 +32,16 @@ public class FileAnalyser {
      * @throws IOException
      */
     public static boolean requiredFields_areInFile(String pathToFile) throws IOException {
-        boolean res;
+        boolean res = false;
 
-        FileReader fileReader = new FileReader(pathToFile);
-        JsonNode jsonNode = objMapper.readTree(fileReader);
+        if(isJsonFileExtension(pathToFile)) {
+            FileReader fileReader = new FileReader(pathToFile);
+            JsonNode jsonNode = objMapper.readTree(fileReader);
 
-        //System.out.println("filterCollected?" + FILE_REQUIRED_FIELDS.stream().filter(fieldName -> jsonNode.has(fieldName)).collect(Collectors.toList()).size());
-        res = FILE_REQUIRED_FIELDS.stream().allMatch(fieldName -> jsonNode.has(fieldName));
-        System.out.println(String.format("Required_Fields allMatch? %1b", res));
+            //System.out.println("filterCollected?" + FILE_REQUIRED_FIELDS.stream().filter(fieldName -> jsonNode.has(fieldName)).collect(Collectors.toList()).size());
+            res = FILE_REQUIRED_FIELDS.stream().allMatch(fieldName -> jsonNode.has(fieldName));
+            System.out.println(String.format("Required_Fields allMatch? %1b", res));
+        }
 
         return res;
     }
@@ -46,21 +49,23 @@ public class FileAnalyser {
     public static void readFile(String pathToFile) {
 
         try {
-            FileReader fileReader = new FileReader(pathToFile);
+            if(requiredFields_areInFile(pathToFile)) {
+                FileReader fileReader = new FileReader(pathToFile);
 
-            JsonNode jsonNode = objMapper.readTree(fileReader);
-            //System.out.println(jsonNode.toString());
-            //System.out.println(jsonNode.size());
+                JsonNode jsonNode = objMapper.readTree(fileReader);
+                //System.out.println(jsonNode.toString());
+                //System.out.println(jsonNode.size());
 
-            //jsonNode.elements().forEachRemaining(jnode -> System.out.println(jnode.getNodeType() + " " + jnode));System.out.println();
+                //jsonNode.elements().forEachRemaining(jnode -> System.out.println(jnode.getNodeType() + " " + jnode));System.out.println();
 
-            jsonNode.fieldNames().forEachRemaining(field -> {
-                System.out.println("fieldName: " + field);
-                JsonNodeType jNodeType = jsonNode.get(field).getNodeType();
-                System.out.println((jNodeType == JsonNodeType.ARRAY) ? "Values: " + jsonNode.get(field).toPrettyString() : "Value: " + jsonNode.findValues(field));
-            });
+                jsonNode.fieldNames().forEachRemaining(field -> {
+                    System.out.println("fieldName: " + field);
+                    JsonNodeType jNodeType = jsonNode.get(field).getNodeType();
+                    System.out.println((jNodeType == JsonNodeType.ARRAY) ? "Values: " + jsonNode.get(field).toPrettyString() : "Value: " + jsonNode.findValues(field));
+                });
 
-            fileReader.close();
+                fileReader.close();
+            }
         }
         catch (IOException ioe) {
             System.err.println("error cause: " + ioe.getMessage());
@@ -75,14 +80,17 @@ public class FileAnalyser {
     }
 
     public static void writeFile(String pathToFile) {
+
         try {
-            FileReader fileReader = new FileReader(pathToFile);
+            if(requiredFields_areInFile(pathToFile)) {
+                FileReader fileReader = new FileReader(pathToFile);
 
-            JsonNode jsonNode = objMapper.readTree(fileReader);
-            JsonHandler.setNodeValue("repair product", true, jsonNode, "setTaskCompleted", pathToFile);
-            JsonHandler.setNodeValue("repair product", null, jsonNode, "setTaskAchieved", pathToFile);
+                JsonNode jsonNode = objMapper.readTree(fileReader);
+                JsonHandler.setNodeValue("repair product", true, jsonNode, "setTaskCompleted", pathToFile);
+                JsonHandler.setNodeValue("repair product", null, jsonNode, "setTaskAchieved", pathToFile);
 
-            fileReader.close();
+                fileReader.close();
+            }
         }
         catch (IOException e) {
             System.err.println("error cause: " + e.getMessage());
