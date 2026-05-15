@@ -175,7 +175,7 @@ public class JsonHandler {
         }
     }
 
-    //todo:implement task editor feature "editTaskLibelle" & //todo:updateTask() update Whole Task/field(s)
+    //todo:implement task editor feature "editTaskLibelle" & updateTask() update Whole Task/field(s)
     private static void editTaskLibelle(JsonNode jsonNode, String inputTasklibelle, String editedTaskLibelle, String pathToFile) throws IOException {
         JsonNode scheduleNode = getscheduleNode(jsonNode);
 
@@ -223,7 +223,6 @@ public class JsonHandler {
     }
     private static JsonNode getscheduleNode(JsonNode jsonNode) { return jsonNode.get("schedule"); }
     private static JsonNode getachievedNode(JsonNode jsonNode) { return jsonNode.get("achieved"); }
-    //jsonNode.findValue("achieved");todo: define in FileAnalyser a mainControl feature of requiring field in file
 
     /**
      * To retrieve the index of an existing node with {@code taskName} value
