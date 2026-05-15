@@ -38,7 +38,7 @@
     "required" : true,
     "completed" : false
   }, {
-    "task" : "finance tuto",
+    "task" : "get more educated on finance",
     "priorityOrder" : 3,
     "activityTypes" : [ 3, 5 ],
     "required" : true,

@@ -18,16 +18,23 @@ public class Main {
         FileAnalyser.readFile(JSON_FILE);
 
         try {
-            JsonNode jsonNode = FileAnalyser.objMapper.readTree(new FileReader(JSON_FILE));
+            System.out.println("::Searching requiredFields in File process::");
+            if(FileAnalyser.requiredFields_areInFile(JSON_FILE)) {
 
-            JsonHandler.setNodeValue("auto maintenance", true, jsonNode, "setTaskCompleted", JSON_FILE);
+                JsonNode jsonNode = FileAnalyser.objMapper.readTree(new FileReader(JSON_FILE));
 
-            Task javaCreationTask = new Task("create own java api", 2, new ArrayList<>(Arrays.asList(1, 3, 4, 5 )), true, false);
-            JsonHandler.setNodeValue("schedule", javaCreationTask, jsonNode, "scheduleTask", JSON_FILE);
+                JsonHandler.setNodeValue("auto maintenance", true, jsonNode, "setTaskCompleted", JSON_FILE);
+                Task javaCreationTask = new Task("create own java api", 2, new ArrayList<>(Arrays.asList(1, 3, 4, 5)), true, false);
+                JsonHandler.setNodeValue("schedule", javaCreationTask, jsonNode, "scheduleTask", JSON_FILE);
 
-            JsonHandler.findTaskNode("create own java api", "schedule", jsonNode);
+                JsonHandler.findTaskNode("create own java api", "schedule", jsonNode);
+                JsonHandler.setNodeValue("finance tuto", "get more educated on finance", jsonNode, "editTaskLibelle", JSON_FILE);
 
-            FileAnalyser.serializeFile(JSON_FILE, jsonNode);
+                FileAnalyser.serializeFile(JSON_FILE, jsonNode);
+            }
+            else {
+                System.out.println("Required field(s) missing in current file");
+            }
         }
         catch (IOException ioe) {
             System.err.println("error cause: " + ioe.getMessage());

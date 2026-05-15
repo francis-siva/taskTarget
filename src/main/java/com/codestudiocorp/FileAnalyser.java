@@ -17,7 +17,7 @@ public class FileAnalyser {
     public static final ObjectMapper objMapper = new ObjectMapper();
     public static final ArrayList<String> FILE_REQUIRED_FIELDS = new ArrayList<>(Arrays.asList("priority", "activityScope", "schedule", "achieved"));
 
-    public static boolean isJsonFileExtension(String pathToFile) throws IOException {
+    public static boolean isJsonFileExtension(String pathToFile) {
 
         File file = new File(pathToFile);
         //System.out.println(file.getName());

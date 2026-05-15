@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JsonHandler {
-    public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("scheduleTask", "setTaskCompleted", "setTaskAchieved"));
+    public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("scheduleTask", "setTaskCompleted", "setTaskAchieved", "editTaskLibelle"));
     public static final String TASK_FIELD = "task";
     public static final String[] TASK_TYPE = {"schedule", "achieved"};
 
@@ -60,6 +60,11 @@ public class JsonHandler {
                 case "scheduleTask":
                     if(updatedValue instanceof Task) {
                         addTaskToSchedule(jsonNode, ((Task) updatedValue), pathToFile);
+                    }
+                    break;
+                case "editTaskLibelle":
+                    if(updatedValue instanceof String) {
+                        editTaskLibelle(jsonNode, nodeValue, (String) updatedValue, pathToFile);
                     }
                     break;
                 case "setTaskCompleted":
@@ -132,7 +137,7 @@ public class JsonHandler {
             System.out.println("searchingTask: " + searchingTask + "\n taskCopy" + taskCopy);
 
             JsonNode achievedNode = getachievedNode(jsonNode);
-            achievedNode = ((ArrayNode) achievedNode).add(taskCopy);//todo: to uncomment once method defined (addTask ScheduleNode& AchievedNode)
+            achievedNode = ((ArrayNode) achievedNode).add(taskCopy);
             System.out.println("achievedNode: " + achievedNode);
 
             if(isTaskAchieved(jsonNode, taskCopy)) {
@@ -144,7 +149,7 @@ public class JsonHandler {
         else {
             System.out.println(String.format("%1$s \"%2$s\" is not in [schedule]", TASK_FIELD.toUpperCase(), taskName));
         }
-    }//todo:implement task editor feature
+    }
 
 
     private static void addTaskToSchedule(JsonNode jsonNode, Task taskToCreate, String pathToFile) throws IOException {
@@ -170,7 +175,29 @@ public class JsonHandler {
         }
     }
 
-    //Search Task depends on taskTypeInput value ("schedule", "achieved")
+    //todo:implement task editor feature "editTaskLibelle" & //todo:updateTask() update Whole Task/field(s)
+    private static void editTaskLibelle(JsonNode jsonNode, String inputTasklibelle, String editedTaskLibelle, String pathToFile) throws IOException {
+        JsonNode scheduleNode = getscheduleNode(jsonNode);
+
+        JsonNode inputJsonNode = findTaskNode(inputTasklibelle, TASK_TYPE[0], jsonNode);
+        if(inputJsonNode != null) {
+            //System.out.println("ArrayNode: "+ scheduleNode.isArray());//todo: in custom BusinessException file if scheduleNode.isArray()
+            int inputNode_index = scheduleNode.findValues(TASK_FIELD).indexOf(inputJsonNode);
+            System.out.println(String.format("Current %1$s name will be edited from node: \n%2$s", TASK_FIELD, scheduleNode.get(inputNode_index)));
+
+            JsonNode jsonNodeToEdit = scheduleNode.get(inputNode_index);
+            jsonNodeToEdit = ((ObjectNode) jsonNodeToEdit).put("task", editedTaskLibelle);
+
+            FileAnalyser.serializeFile(pathToFile, jsonNode);
+            System.out.println(String.format("Final edited version: %1$s", jsonNodeToEdit));
+        }
+    }
+
+    /**
+     * Task Search depends on taskTypeInput value ({@code "schedule"}, {@code "achieved"})
+     * and returns a {@code TextNode} value if {@code taskName} result found.
+     * @return a {@code TextNode} value of {@code taskName} inside {@code JsonNode} type
+     */
     public static JsonNode findTaskNode(String taskName, String taskTypeInput, JsonNode jsonNode) {
         JsonNode nodeResult = null;
 
