@@ -1,6 +1,8 @@
 package com.codestudiocorp;
 
 import com.codestudiocorp.controllers.JsonHandler;
+import com.codestudiocorp.exceptions.IllegalBusinessNodeException;
+import com.codestudiocorp.utils.ExceptionMessagePrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -31,7 +33,7 @@ public class FileAnalyser {
      * @return
      * @throws IOException
      */
-    public static boolean requiredFields_areInFile(String pathToFile) throws IOException {
+    public static boolean requiredFields_areInFile(String pathToFile) throws IOException, IllegalBusinessNodeException {
         boolean res = false;
 
         if(isJsonFileExtension(pathToFile)) {
@@ -41,6 +43,9 @@ public class FileAnalyser {
             //System.out.println("filterCollected?" + FILE_REQUIRED_FIELDS.stream().filter(fieldName -> jsonNode.has(fieldName)).collect(Collectors.toList()).size());
             res = FILE_REQUIRED_FIELDS.stream().allMatch(fieldName -> jsonNode.has(fieldName));
             System.out.println(String.format("Required_Fields allMatch? %1b", res));
+
+            if (!res)
+                throw new IllegalBusinessNodeException("Required field(s) missing in current file");
         }
 
         return res;
@@ -68,13 +73,13 @@ public class FileAnalyser {
             }
         }
         catch (IOException ioe) {
-            System.err.println("error cause: " + ioe.getMessage());
-            ioe.printStackTrace();
+            ExceptionMessagePrinter exceptMessagePrinter = new ExceptionMessagePrinter(ioe);
+            exceptMessagePrinter.showErrorAndCause();
             System.exit(-1);
         }
         catch (Exception e) {
-            System.err.println("error cause: " + e.getMessage());
-            e.printStackTrace();
+            ExceptionMessagePrinter exceptMessagePrinter = new ExceptionMessagePrinter(e);
+            exceptMessagePrinter.showErrorAndCause();
             System.exit(-1);
         }
     }
@@ -92,9 +97,10 @@ public class FileAnalyser {
                 fileReader.close();
             }
         }
-        catch (IOException e) {
-            System.err.println("error cause: " + e.getMessage());
-            throw new RuntimeException(e);
+        catch (IOException | IllegalBusinessNodeException e) {
+            ExceptionMessagePrinter exceptMessagePrinter = new ExceptionMessagePrinter(e);
+            exceptMessagePrinter.showErrorAndCause();
+            System.exit(-1);
         }
     }
 
