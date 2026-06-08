@@ -20,4 +20,9 @@ public class ExceptionMessagePrinter {
     public void showCause() {
         System.err.printf("error cause: %s%n", exception.getClass().getSimpleName());
     }
+
+    public void showErrorAndCause() {
+        showError();
+        showCause();
+    }
 }
