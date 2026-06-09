@@ -193,6 +193,44 @@ public class JsonHandler {
         }
     }
 
+    //todo updateTask() update Whole Task/field(s) & update in addTaskToSchedule(): add condition to avoid Doublon task
+    private static void updateTask(JsonNode jsonNode, String inputTasklibelle, Task updatedTask, String pathToFile) {
+        //setNodeValue(String nodeValue, Object updatedValue, JsonNode jsonNode, String nodeOperation, String pathToFile)
+    }
+
+    /** Find available detailed Task object among json array node
+     *
+     * @param taskName
+     *        {@code String} value of existing result from "task" fields to find
+     * @param taskTypeInput
+     *        {@code String} value of ArrayNode field between ("schedule" & "achieved")
+     * @param jsonNode
+     *        {@code JsonNode} the source where to find {@code taskName}
+     * @return an {@code ObjectNode} if result found else null
+     */
+    public static JsonNode findTaskObject(String taskName, String taskTypeInput, JsonNode jsonNode) {
+        ObjectNode  objNodeRes = null;
+
+        if(Arrays.asList(TASK_TYPE).contains(taskTypeInput)) {
+            JsonNode taskTypeInputNode;
+            taskTypeInputNode = (taskTypeInput.equals(TASK_TYPE[0])) ? getscheduleNode(jsonNode) : getachievedNode(jsonNode);
+
+            //Search taskName value among "task" fields List according to valid taskTypeInput ("schedule"/ "achieved")
+            if(taskTypeInputNode.findValuesAsText(TASK_FIELD).contains(taskName)) {
+                int indexTaskName = taskTypeInputNode.findValuesAsText(TASK_FIELD).indexOf(taskName);
+                return taskTypeInputNode.get(indexTaskName);
+            }
+            else {
+                System.err.println(String.format("%1$S \"%2$s\" not found in [%3$s]", TASK_FIELD, taskName, taskTypeInput));
+            }
+
+        }
+        else {
+            System.err.println(String.format("Error on [taskTypeInput] parameter. Wrong argument value is passed: %s", taskTypeInput));
+        }
+        return objNodeRes;
+    }
+
     /**
      * Task Search depends on taskTypeInput value ({@code "schedule"}, {@code "achieved"})
      * and returns a {@code TextNode} value if {@code taskName} result found.
