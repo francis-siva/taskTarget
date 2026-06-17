@@ -10,9 +10,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JsonHandler {
-    public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("scheduleTask", "setTaskCompleted", "setTaskAchieved", "editTaskLibelle"));
+    public static final ArrayList<String> JSON_OPERATION = new ArrayList<>(Arrays.asList("scheduleTask", "setTaskCompleted", "setTaskAchieved", "editTaskLibelle", "modifyScheduleTaskValues"));
     public static final String TASK_FIELD = "task";
     public static final String[] TASK_TYPE = {"schedule", "achieved"};
 
@@ -65,6 +66,11 @@ public class JsonHandler {
                 case "editTaskLibelle":
                     if(updatedValue instanceof String) {
                         editTaskLibelle(jsonNode, nodeValue, (String) updatedValue, pathToFile);
+                    }
+                    break;
+                case "modifyScheduleTaskValues":
+                    if(updatedValue instanceof Task) {
+                        updateScheduleTaskValues(jsonNode, nodeValue, (Task) updatedValue, pathToFile);
                     }
                     break;
                 case "setTaskCompleted":
@@ -157,7 +163,7 @@ public class JsonHandler {
         String searchingValue = taskToCreate.getTaskName();
 
         if(JsonHandler.isSearchingValue_existsInNodeField(TASK_FIELD, searchingValue, scheduleNode)) {
-            System.out.println(String.format("%1$s \"%2$s\" is already present in [schedule]", TASK_FIELD.toUpperCase(), searchingValue));
+            System.err.println(String.format("%1$s \"%2$s\" is already present in [schedule]", TASK_FIELD.toUpperCase(), searchingValue));
         }//todo: else if (case: where similarities in words matching scheduled task(s) to link with)
         else {
             //ObjectNode declaration to add new task in schedule
@@ -175,7 +181,6 @@ public class JsonHandler {
         }
     }
 
-    //todo:implement task editor feature "editTaskLibelle" & updateTask() update Whole Task/field(s)
     private static void editTaskLibelle(JsonNode jsonNode, String inputTasklibelle, String editedTaskLibelle, String pathToFile) throws IOException {
         JsonNode scheduleNode = getscheduleNode(jsonNode);
 
@@ -193,9 +198,24 @@ public class JsonHandler {
         }
     }
 
-    //todo updateTask() update Whole Task/field(s) & update in addTaskToSchedule(): add condition to avoid Doublon task
-    private static void updateTask(JsonNode jsonNode, String inputTasklibelle, Task updatedTask, String pathToFile) {
-        //setNodeValue(String nodeValue, Object updatedValue, JsonNode jsonNode, String nodeOperation, String pathToFile)
+    private static void updateScheduleTaskValues(JsonNode jsonNode, String inputTasklibelle, Task updatedTask, String pathToFile) throws IOException {
+        JsonNode restaskObject = findTaskObject(inputTasklibelle, TASK_TYPE[0], jsonNode);
+
+        if(restaskObject != null && restaskObject.isObject()) {
+            ObjectNode taskObject = (ObjectNode) restaskObject;
+
+            taskObject.put("task", updatedTask.getTaskName());
+            taskObject.put("priorityOrder", updatedTask.getPriorityOrder());
+            taskObject.set("activityTypes", FileAnalyser.objMapper.valueToTree(updatedTask.getActivityTypes()));
+            taskObject.put("required", updatedTask.isRequired());
+            taskObject.put("completed", updatedTask.isCompleted());
+
+            FileAnalyser.serializeFile(pathToFile, jsonNode);
+            System.out.println(String.format("Final updated version: %1$s", taskObject));
+        }
+        else {
+            System.err.print(String.format(". Nothing to update on [%1$s]\n", TASK_TYPE[0]));
+        }
     }
 
     /** Find available detailed Task object among json array node
@@ -221,7 +241,7 @@ public class JsonHandler {
                 return taskTypeInputNode.get(indexTaskName);
             }
             else {
-                System.err.println(String.format("%1$S \"%2$s\" not found in [%3$s]", TASK_FIELD, taskName, taskTypeInput));
+                System.err.printf(String.format("\n%1$S \"%2$s\" not found in [%3$s]", TASK_FIELD, taskName, taskTypeInput));
             }
 
         }
